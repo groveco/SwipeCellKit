@@ -26,7 +26,7 @@ protocol SwipeControllerDelegate: class {
     
 }
 
-class SwipeController: NSObject {
+public class SwipeController: NSObject {
     
     weak var swipeable: (UIView & Swipeable)?
     weak var actionsContainerView: UIView?
@@ -62,6 +62,12 @@ class SwipeController: NSObject {
         
         configure()
     }
+    
+    public func updateAccessibilityFocus () {
+         guard let buttonWrapperView = swipeable?.actionsView?.subviews.first(where: { $0 as? SwipeActionButtonWrapperView != nil }) else { return }
+         guard let swipeActionButton = buttonWrapperView.subviews.first(where: { $0 as? SwipeActionButton != nil }) else { return }
+         UIAccessibility.post(notification: .layoutChanged, argument: swipeActionButton)
+     }
 
     @objc func handlePan(gesture: UIPanGestureRecognizer) {
         guard let target = actionsContainerView, var swipeable = self.swipeable else { return }
@@ -343,7 +349,7 @@ class SwipeController: NSObject {
 }
 
 extension SwipeController: UIGestureRecognizerDelegate {
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == tapGestureRecognizer {
             if UIAccessibility.isVoiceOverRunning {
                 scrollView?.hideSwipeables()

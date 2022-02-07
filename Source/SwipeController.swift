@@ -65,7 +65,7 @@ public class SwipeController: NSObject {
     
     public func updateAccessibilityFocus () {
          guard let buttonWrapperView = swipeable?.actionsView?.subviews.first(where: { $0 as? SwipeActionButtonWrapperView != nil }) else { return }
-         guard let swipeActionButton = buttonWrapperView.subviews.first(where: { $0 as? SwipeActionButton != nil }) else { return }
+         guard let swipeActionButton = buttonWrapperView.subviews.last(where: { $0 as? SwipeActionButton != nil }) else { return }
          UIAccessibility.post(notification: .layoutChanged, argument: swipeActionButton)
      }
 
